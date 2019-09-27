@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
 import axios from 'axios';
 
-function useService(url,initialData) {
+function useService(url = "", initialData = {}, callback = (data) => {
+    return data
+}) {
     const [data, setData] = useState(initialData);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -14,11 +16,10 @@ function useService(url,initialData) {
 
                 if (!cancelRequest) {
                     setLoading(false);
-                    setData(response.data);
+                    setData(callback(response.data));
                 }
             })
             .catch(error => {
-
                 if (!cancelRequest) {
                     setLoading(false);
                     setError(error);
