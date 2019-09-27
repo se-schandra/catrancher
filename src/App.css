@@ -38,3 +38,11 @@ img, td {
     width: 90px;
     height: 90px;
 }
+
+img.selected {
+    background-color: lightgray;
+}
+
+table {
+    border-color: azure;
+}

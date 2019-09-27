@@ -18,7 +18,12 @@ describe("Catrancher renders without crash", () => {
     it("Catrancher renders empty page before cat list is loaded", async () => {
         mock.onGet(testUrl).replyOnce(200, {
             cats: [
-                { name:"1ttr" }
+                [
+                    2,
+                    "t",
+                    "s",
+                    "r"
+                ]
             ]
         });
         let component;
@@ -48,7 +53,7 @@ describe("Catrancher renders without crash", () => {
         expect(queryByTestId("cat-list")).toBeNull();
         expect(queryByTestId("clowders-list")).toBeNull();
         wait(() => {
-            // expect(document.body).not.toContainHTML("Loading...");
+            expect(document.body).not.toContainHTML("Loading...");
             expect(getByTestId("catrancher-container")).toBeInTheDocument();
             expect(getByTestId("cat-list-data-error")).toBeInTheDocument();
             expect(queryByTestId("cat-list")).toBeNull();

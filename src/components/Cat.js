@@ -3,13 +3,20 @@ import React from 'react';
 /**
  * Renders the cat view
  * @param data : Cat data, mainly id at moment
+ * @param selected: if cat is selected
+ * @param updateCatSelection: click handler when cat is clicked
  */
-function Cat({data}) {
+function Cat({data, selected, updateCatSelection}) {
     if (data) {
-        return <img src={`http://quantcats.herokuapp.com/static/cats/${data}.png`}/>
+        const src = `http://quantcats.herokuapp.com/static/cats/${data}.png`;
+        return (
+            updateCatSelection ?
+                <img onClick={updateCatSelection} src={src} className={selected ? "selected" : ""}/> :
+                <img src={src}/>
+        );
     }
 
     return null;
 }
 
-export default Cat;
+export default React.memo(Cat);

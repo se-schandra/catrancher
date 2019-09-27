@@ -1,32 +1,26 @@
 import React from "react";
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-
 import {act, renderHook} from "@testing-library/react-hooks";
-import useService from "../components/useService";
+import useClowderManagement from "../components/useClowderManagement";
 import {cleanup} from "@testing-library/react";
 
 const mock = new MockAdapter(axios);
 
-describe("test useService hook", () => {
+describe("test useClowderManagement hook", () => {
 
-    const url = "test_url";
+    const url = "http://quantcats.herokuapp.com/bag";
     afterEach(() => {
         cleanup();
-        jest.clearAllMocks();
     });
 
 
     it("it renders default value and gets updated on fetch resolve", async() => {
 
-        mock.onGet(url, { delayResponse: 2000 }).replyOnce(200, {
-            cats: [
-                { name:"1ttr" }
-            ]
-        });
+        mock.onGet(url, {delayResponse: 500}).replyOnce(200, {cats: [[2, "t", "s", "r"]]});
         let hook;
         act(() => {
-            hook = renderHook(() => useService(url,[]));
+            hook = renderHook(() => useClowderManagement());
         });
         const {result,waitForNextUpdate} = hook;
         expect(result.current.data).toEqual([]);
@@ -36,8 +30,9 @@ describe("test useService hook", () => {
         await waitForNextUpdate();
 
         const data = result.current.data;
-        expect(data.cats.length).toEqual(1);
-        expect(data.cats[0].name).toEqual("1ttr" );
+        expect(data.length).toEqual(1);
+        expect(data[0].id).toEqual("2tsr");
+        expect(data[0].selected).toEqual(false);
         expect(result.current.loading).toEqual(false);
         expect(result.current.error).toEqual("");
     });
@@ -47,7 +42,7 @@ describe("test useService hook", () => {
         mock.onGet(url).networkErrorOnce();
         let hook;
         act(() => {
-            hook = renderHook(() => useService(url,[]));
+            hook = renderHook(() => useClowderManagement());
         });
         const {result,waitForNextUpdate} = hook;
         expect(result.current.data).toEqual([]);
@@ -62,33 +57,22 @@ describe("test useService hook", () => {
         expect(result.current.error).not.toEqual("");
     });
 
+    it("when update selection is called thrice clowder list validated", async () => {
 
-    it("it executes callback on data received ", async () => {
-
-        const callback = jest.fn((dataReceived) => {
-            return dataReceived.cats.map(aCat => aCat.name);
-        });
-        mock.onGet(url, {delayResponse: 2000}).replyOnce(200, {
-            cats: [
-                {name: "1ttr"}
-            ]
-        });
+        mock.onGet(url, {delayResponse: 500}).replyOnce(200, {cats: [[2, "t", "s", "r"], [3, "t", "s", "r"], [1, "t", "s", "r"]]});
         let hook;
         act(() => {
-            hook = renderHook(() => useService(url, [], callback));
+            hook = renderHook(() => useClowderManagement());
         });
         const {result, waitForNextUpdate} = hook;
-        expect(result.current.data).toEqual([]);
-        expect(result.current.error).toEqual("");
-        expect(result.current.loading).toEqual(true);
-
         await waitForNextUpdate();
+        act(() => {
+            result.current.updateCatSelection("1tsr");
+            result.current.updateCatSelection("2tsr");
+            result.current.updateCatSelection("3tsr");
+        });
+        expect(data.length).toEqual(3);
 
-        const data = result.current.data;
-        expect(data.length).toEqual(1);
-        expect(data[0]).toEqual("1ttr");
-        expect(result.current.loading).toEqual(false);
-        expect(result.current.error).toEqual("");
     });
 
 });
