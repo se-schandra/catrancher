@@ -27,7 +27,6 @@ function useClowderManagement() {
         setLoading(true);
         axios.get("http://quantcats.herokuapp.com/bag")
             .then(response => {
-
                 if (!cancelRequest) {
                     setLoading(false);
                     setData(callback(response.data));
@@ -36,7 +35,7 @@ function useClowderManagement() {
             .catch(error => {
                 if (!cancelRequest) {
                     setLoading(false);
-                    setError(error);
+                    setError("data not received");
                 }
             });
     };

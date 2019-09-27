@@ -24,13 +24,13 @@ function Catrancher() {
         return (
             <div data-testid="catrancher-container" className="catrancher-container">
 
-                <div className="cats-view" data-test-id="cats-list">
+                <div className="cats-view" data-testid="cats-list">
                     {
                         data.map((cat) => <Cat key={cat.id} data={cat.id} selected={cat.selected}
                                                updateCatSelection={updateCatSelection.bind(this, cat.id)}/>)
                     }
                 </div>
-                <Clowders clowderList={clowderList} data-testid="clowders-list"/>
+                <Clowders clowderList={clowderList}/>
 
             </div>
         )

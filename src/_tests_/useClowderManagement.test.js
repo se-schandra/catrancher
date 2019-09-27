@@ -12,12 +12,13 @@ describe("test useClowderManagement hook", () => {
     const url = "http://quantcats.herokuapp.com/bag";
     afterEach(() => {
         cleanup();
+        jest.clearAllMocks();
     });
 
 
     it("it renders default value and gets updated on fetch resolve", async() => {
 
-        mock.onGet(url, {delayResponse: 500}).replyOnce(200, {cats: [[2, "t", "s", "r"]]});
+        mock.onGet(url).replyOnce(200, {cats: [[2, "t", "s", "r"]]});
         let hook;
         act(() => {
             hook = renderHook(() => useClowderManagement());
@@ -57,24 +58,49 @@ describe("test useClowderManagement hook", () => {
         expect(result.current.error).not.toEqual("");
     });
 
-    it("when update selection is called thrice clowder list validated", async () => {
+    /* it("when update selection is called thrice, validate clowder is called and selection is reset ", async () => {
 
-        mock.onGet(url, {delayResponse: 500}).replyOnce(200, {cats: [[2, "t", "s", "r"], [3, "t", "s", "r"], [1, "t", "s", "r"]]});
-        let hook;
-        act(() => {
-            hook = renderHook(() => useClowderManagement());
-        });
-        const {result, waitForNextUpdate} = hook;
-        await waitForNextUpdate();
-        act(() => {
-            result.current.updateCatSelection("1tsr");
-            result.current.updateCatSelection("2tsr");
-            result.current.updateCatSelection("3tsr");
-        });
-        expect(data.length).toEqual(3);
+         mock.onGet(url).replyOnce(200, {cats: [[1, "t", "s", "r"], [2, "t", "s", "r"], [3, "t", "s", "r"]]});
 
-    });
+         let validClowder = false;
+         mock.onGet("http://quantcats.herokuapp.com/clowder").replyOnce(function(config) {
+             return new Promise(function(resolve, reject) {
+                 validClowder = true;
+                 resolve({valid:true})
+             });
+         });
 
+         let hook;
+         act(() => {
+             hook = renderHook(() => useClowderManagement());
+         });
+         const {result,waitForNextUpdate} = hook;
+
+         await waitForNextUpdate();
+
+         expect(result.current.data.length).toEqual(3);
+         act(() => {
+             result.current.updateCatSelection("1tsr");
+         });
+         await waitForNextUpdate();
+
+         expect(result.current.data[0].selected).toEqual(true);
+         act(() => {
+             result.current.updateCatSelection("2tsr");
+         });
+         await waitForNextUpdate();
+         expect(result.current.data[1].selected).toEqual(true);
+         act(() => {
+             result.current.updateCatSelection("3tsr");
+         });
+
+         await waitForNextUpdate();
+
+         expect(validClowder).toEqual(true);
+         expect(result.current.data[0].selected).toEqual(false);
+         expect(result.current.data[1].selected).toEqual(false);
+         expect(result.current.data[2].selected).toEqual(false);
+     });*/
 });
 
 

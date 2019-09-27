@@ -34,11 +34,11 @@ describe("Catrancher renders without crash", () => {
         expect(document.body).toContainHTML("Loading...");
         expect(queryByTestId("cat-list")).toBeNull();
         expect(queryByTestId("clowders-list")).toBeNull();
-        wait(() => {
+        await wait(() => {
             expect(document.body).not.toContainHTML("Loading...");
             expect(getByTestId("catrancher-container")).toBeInTheDocument();
             expect(queryByTestId("cat-list-data-error")).toBeNull();
-            expect(getByTestId("cat-list")).toBeInTheDocument();
+            expect(getByTestId("cats-list")).toBeInTheDocument();
             expect(getByTestId("clowders-list")).toBeInTheDocument();
         });
     });
@@ -50,13 +50,13 @@ describe("Catrancher renders without crash", () => {
             component = render(<Catrancher/>);
         });
         const {getByTestId, queryByTestId} = component;
-        expect(queryByTestId("cat-list")).toBeNull();
+        expect(queryByTestId("cats-list")).toBeNull();
         expect(queryByTestId("clowders-list")).toBeNull();
-        wait(() => {
+        await wait(() => {
             expect(document.body).not.toContainHTML("Loading...");
-            expect(getByTestId("catrancher-container")).toBeInTheDocument();
+            expect(queryByTestId("catrancher-container")).toBeNull();
             expect(getByTestId("cat-list-data-error")).toBeInTheDocument();
-            expect(queryByTestId("cat-list")).toBeNull();
+            expect(queryByTestId("cats-list")).toBeNull();
             expect(queryByTestId("clowders-list")).toBeNull();
         });
     });

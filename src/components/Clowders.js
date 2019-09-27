@@ -11,7 +11,7 @@ function Clowders({clowderList = []}) {
 
 
         return (
-            <table border="1" className="clowder-view">
+            <table border="1" className="clowder-view" data-testid="clowders-list">
                 <tbody>
                 {
                     clowderList.map((aCatArray, index) =>
